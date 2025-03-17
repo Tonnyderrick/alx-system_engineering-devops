@@ -1,2 +1,2 @@
 #!/bin/bash
-find . -empty -print0 | xargs -0 -n1 basename
+find . -empty | rev | cut -d '/' -f 1 | rev
