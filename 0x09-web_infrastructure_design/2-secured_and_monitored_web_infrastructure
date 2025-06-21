@@ -1,0 +1,63 @@
+The website www.foobar.com is hosted on a secured and monitored web infrastructure using three servers. This setup improves security, serves encrypted traffic via HTTPS, and enables observability through monitoring tools.
+
+Infrastructure Components:
+
+1. Load Balancer (HAProxy):
+   - Distributes incoming traffic to backend servers using a round-robin algorithm.
+   - Terminates SSL connections to allow encrypted communication with users.
+
+2. Web and Application Servers:
+   - Serve dynamic and static content.
+   - Run application code and interact with the database.
+
+3. Database (MySQL):
+   - Stores persistent data.
+   - Uses a primary-replica setup, but currently only the primary node accepts write operations.
+
+4. Firewalls:
+   - Three firewalls are configured:
+     a) Between the internet and the load balancer.
+     b) Between the load balancer and backend servers.
+     c) Between the application servers and the database.
+   - Firewalls control and restrict traffic between components, preventing unauthorized access and DDoS attacks.
+
+5. SSL Certificate:
+   - Enables HTTPS support on www.foobar.com.
+   - Encrypts data in transit, protecting sensitive information like login credentials.
+
+6. Monitoring Clients:
+   - Installed on all three servers.
+   - Collect logs, metrics, and system events.
+   - Tools like Sumologic, Prometheus, or ELK Stack collect and forward data to centralized dashboards.
+
+Purpose of Each Element:
+
+- **Firewalls**: Prevent unauthorized access, filter traffic, and reduce attack surfaces.
+- **HTTPS via SSL Certificate**: Encrypts communication between client and server, ensuring privacy and integrity.
+- **Monitoring Tools**: Track server performance, resource usage, traffic (QPS - queries per second), and detect anomalies in real time.
+- **Monitoring Data Collection**: Agents collect system metrics, logs, and application data and send them to a monitoring server or cloud service for analysis.
+
+Monitoring Web Server QPS:
+
+- QPS (Queries Per Second) can be monitored using tools like:
+  - Nginx logs + log forwarder (e.g., Fluentd or Filebeat).
+  - Prometheus exporter to track request rates.
+  - Custom scripts reporting metrics to Sumologic or ELK.
+
+Issues with This Infrastructure:
+
+1. **SSL Termination at Load Balancer**:
+   - Decrypting SSL at the load balancer level exposes unencrypted traffic between load balancer and backend servers.
+   - To fully secure traffic, SSL should also be enabled internally (end-to-end encryption).
+
+2. **Single Write-Capable MySQL Server**:
+   - Creates a bottleneck and single point of failure for write operations.
+   - If the primary node fails, write operations stop until failover is manually triggered.
+
+3. **Servers with All Components Installed**:
+   - Increases attack surface and complexity.
+   - Harder to scale and maintain because each server must run multiple services (app, web, and DB).
+   - Limits specialization and efficient resource use.
+
+Conclusion:
+This infrastructure is significantly more secure and observable compared to a basic setup. However, it still has risks, such as SSL termination issues and limited database write redundancy, that need to be addressed in more advanced architectures.
