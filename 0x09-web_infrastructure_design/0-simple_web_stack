@@ -1,0 +1,23 @@
+A user opens www.foobar.com in a browser. The browser sends a DNS request to get the IP address of the domain. The DNS resolves www.foobar.com to IP address 8.8.8.8. The browser then sends an HTTP request to that IP.
+
+At 8.8.8.8, there is a single server that hosts a web infrastructure with the following components:
+
+1. Web Server: Nginx is installed to accept incoming HTTP requests. It can serve static files (like images or HTML) and pass dynamic requests to the application server.
+
+2. Application Server: This runs the application code (Python). It handles business logic and interacts with the database to return dynamic content.
+
+3. Application Files: These are the source code files for the website stored on the server. They contain everything needed to run the website.
+
+4. Database: MySQL is used to store persistent data like user information, posts, or products. The application server connects to it to read/write data.
+
+5. Domain Name: www.foobar.com is a domain configured with a DNS A record pointing to the IP address 8.8.8.8. This makes it easier for users to access the server.
+
+6. DNS Record: The `www` part in www.foobar.com is a subdomain. It uses an A record to map the domain to the server’s IP address.
+
+7. Communication Protocol: The user’s computer communicates with the server using the HTTP protocol over the internet.
+
+Issues with this infrastructure:
+
+- Single Point of Failure (SPOF): If the server goes down, the entire site becomes unavailable.
+- Downtime during maintenance: If the server is being updated or restarted, the site will be offline.
+- No scalability: One server cannot handle a large amount of traffic or be easily replicated to serve more users.
