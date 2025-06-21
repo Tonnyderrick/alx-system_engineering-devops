@@ -1,0 +1,67 @@
+The website [www.foobar.com](http://www.foobar.com) is hosted on a distributed web infrastructure that uses three servers. The goal is to improve availability, reliability, and scalability compared to a single-server setup.
+
+Infrastructure Components:
+
+1. Load Balancer (HAProxy):
+
+   * Distributes incoming traffic between the web and application servers.
+   * Prevents any one server from being overwhelmed.
+   * Configured with a round-robin algorithm: it forwards each new request to the next server in line, ensuring even distribution of traffic.
+
+2. Web Server (Nginx):
+
+   * Handles HTTP requests and serves static content such as HTML, CSS, images, etc.
+   * Acts as a reverse proxy to forward dynamic requests to the application server.
+
+3. Application Server:
+
+   * Runs the core application logic ( Python).
+   * Connects to the database to process and return dynamic content.
+
+4. Application Files:
+
+   * The same code base is deployed on all application servers to ensure consistency.
+
+5. Database (MySQL):
+
+   * A primary-replica (master-slave) setup is used.
+   * The primary node handles all write operations (INSERT, UPDATE, DELETE).
+   * The replica node(s) handle read operations (SELECT), reducing the load on the primary.
+
+Reasons for Adding New Elements:
+
+* Load Balancer: To prevent overload on a single server and ensure high availability.
+* Multiple Servers: To handle more traffic and eliminate a single point of failure.
+* Database Replication: Improves read performance and provides a backup if the primary fails.
+
+Load Balancer Setup:
+
+* This is an Active-Active setup: both backend servers are actively handling traffic.
+* Difference:
+
+  * Active-Active: All servers share the load simultaneously.
+  * Active-Passive: One server handles traffic; others stay idle until needed for failover.
+
+Database Primary-Replica Cluster:
+
+* The Primary (Master) handles all writes and updates.
+* The Replica (Slave) is synchronized with the primary and handles read-only requests.
+* This improves performance and reliability by offloading read traffic.
+
+Issues with This Infrastructure:
+
+1. SPOF (Single Point of Failure):
+
+   * The load balancer itself can become a SPOF if not made redundant.
+
+2. Security:
+
+   * No firewall configured to protect against external threats.
+   * No HTTPS, which means data is transmitted in plain text.
+
+3. No Monitoring:
+
+   * Without tools like Prometheus, Nagios, or ELK stack, issues may go undetected.
+
+Conclusion:
+This distributed setup improves scalability and performance, but still has critical areas to address in terms of redundancy, security, and monitoring.
