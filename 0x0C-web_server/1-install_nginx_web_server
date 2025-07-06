@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+# Install nginx silently with -y
+apt-get update -y
+apt-get install nginx -y
+
+# Replace default index page with Hello World!
+echo "Hello World!" > /var/www/html/index.html
+
+# Ensure nginx is started (without systemctl)
+service nginx start
