@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+# Update package list and install nginx
+apt-get update -y
+apt-get install nginx -y
+
+# Replace default index page (optional for testing)
+echo "Hello World!" > /var/www/html/index.html
+
+# Add redirect rule to the default nginx server config
+CONFIG="/etc/nginx/sites-available/default"
+
+# Use sed to insert the redirect location in the server block
+sed -i '/server_name _;/a \ \n\tlocation /redirect_me {\n\t\treturn 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;\n\t}' "$CONFIG"
+
+# Restart nginx without systemctl
+service nginx restart
