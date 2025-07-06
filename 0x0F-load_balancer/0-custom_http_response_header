@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+# Install nginx if not already installed
+apt-get update -y
+apt-get install nginx -y
+
+# Replace default index.html for testing (optional)
+echo "Server served by: $(hostname)" > /var/www/html/index.html
+
+# Nginx config file
+CONFIG="/etc/nginx/sites-available/default"
+
+# Add custom header inside the server block
+# Remove previous X-Served-By lines to avoid duplicates
+sed -i '/add_header X-Served-By/d' "$CONFIG"
+sed -i '/server_name _;/a \\\n\tadd_header X-Served-By "$hostname";' "$CONFIG"
+
+# Restart nginx (not using systemctl)
+service nginx restart
