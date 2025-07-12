@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+# This script retrieves DNS A record information for given subdomains of a domain
+
+get_subdomain_info() {
+    local subdomain=$1
+    local domain=$2
+    full_domain="${subdomain}.${domain}"
+    record=$(dig "$full_domain" +short | head -n 1)
+
+    if [[ -n "$record" ]]; then
+        echo "The subdomain $subdomain is a A record and points to $record"
+    else
+        echo "The subdomain $subdomain has no A record or is unreachable"
+    fi
+}
+
+if [[ $# -eq 1 ]]; then
+    domain=$1
+    for sub in www lb-01 web-01 web-02; do
+        get_subdomain_info "$sub" "$domain"
+    done
+elif [[ $# -eq 2 ]]; then
+    domain=$1
+    subdomain=$2
+    get_subdomain_info "$subdomain" "$domain"
+else
+    echo "Usage: $0 domain [subdomain]"
+    exit 1
+fi
