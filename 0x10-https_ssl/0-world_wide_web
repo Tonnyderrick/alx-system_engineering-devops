@@ -1,30 +1,23 @@
 #!/usr/bin/env bash
-# Displays the A records of specified subdomains for a given domain using dig
+# This script displays DNS A records for given domain and subdomains
 
-get_subdomain_info() {
-    local domain="$1"
-    local subdomain="$2"
-
-    result=$(dig +short "${subdomain}.${domain}")
-    if [ -n "$result" ]; then
-        echo "The subdomain $subdomain is a A record and points to $result"
-    else
-        echo "The subdomain $subdomain has no A record"
-    fi
-}
-
-domain="$1"
-subdomain="$2"
+domain=$1
+subdomain=$2
 
 if [ -z "$domain" ]; then
-    echo "Usage: $0 <domain> [subdomain]"
+    echo "Usage: $0 domain [subdomain]"
     exit 1
 fi
 
+# If subdomain is provided, query only it
 if [ -n "$subdomain" ]; then
-    get_subdomain_info "$domain" "$subdomain"
+    fqdn="${subdomain}.${domain}"
+    ip=$(dig +short "$fqdn" | head -n1)
+    echo "The subdomain $subdomain is a A record and points to $ip"
 else
     for sub in www lb-01 web-01 web-02; do
-        get_subdomain_info "$domain" "$sub"
+        fqdn="${sub}.${domain}"
+        ip=$(dig +short "$fqdn" | head -n1)
+        echo "The subdomain $sub is a A record and points to $ip"
     done
 fi
