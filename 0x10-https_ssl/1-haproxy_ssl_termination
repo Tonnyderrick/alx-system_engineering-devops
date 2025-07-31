@@ -1,0 +1,28 @@
+global
+    log /dev/log local0
+    log /dev/log local1 notice
+    chroot /var/lib/haproxy
+    stats timeout 30s
+    user haproxy
+    group haproxy
+    daemon
+    maxconn 256
+    tune.ssl.default-dh-param 2048
+
+defaults
+    log     global
+    mode    http
+    option  httplog
+    option  dontlognull
+    timeout connect 5000
+    timeout client  50000
+    timeout server  50000
+
+frontend https-in
+    bind *:443 ssl crt /etc/letsencrypt/live/www.holberton.online/fullchain.pem \
+                     key /etc/letsencrypt/live/www.holberton.online/privkey.pem
+    mode http
+    default_backend web-backend
+
+backend web-backend
+    server web-01 127.0.0.1:80 check
