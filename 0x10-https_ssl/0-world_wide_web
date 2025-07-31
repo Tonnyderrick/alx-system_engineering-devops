@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+
+# Function to fetch and display subdomain information
+get_subdomain_info() {
+    local domain=$1
+    local subdomain=$2
+
+    result=$(dig +short "$subdomain.$domain")
+    if [ -n "$result" ]; then
+        echo "The subdomain $subdomain is a A record and points to $result"
+    else
+        echo "The subdomain $subdomain has no A record"
+    fi
+}
+
+# Main logic
+domain=$1
+subdomain=$2
+
+# Check if domain is provided
+if [ -z "$domain" ]; then
+    echo "Usage: $0 <domain> [subdomain]"
+    exit 1
+fi
+
+# If subdomain is provided
+if [ -n "$subdomain" ]; then
+    get_subdomain_info "$domain" "$subdomain"
+else
+    # Default subdomains
+    for sd in www lb-01 web-01 web-02; do
+        get_subdomain_info "$domain" "$sd"
+    done
+fi
