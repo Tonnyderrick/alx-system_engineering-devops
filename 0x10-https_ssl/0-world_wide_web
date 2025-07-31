@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
+# Displays the A records of specified subdomains for a given domain using dig
 
-# Function to fetch and display subdomain information
 get_subdomain_info() {
-    local domain=$1
-    local subdomain=$2
+    local domain="$1"
+    local subdomain="$2"
 
-    result=$(dig +short "$subdomain.$domain")
+    result=$(dig +short "${subdomain}.${domain}")
     if [ -n "$result" ]; then
         echo "The subdomain $subdomain is a A record and points to $result"
     else
@@ -13,22 +13,18 @@ get_subdomain_info() {
     fi
 }
 
-# Main logic
-domain=$1
-subdomain=$2
+domain="$1"
+subdomain="$2"
 
-# Check if domain is provided
 if [ -z "$domain" ]; then
     echo "Usage: $0 <domain> [subdomain]"
     exit 1
 fi
 
-# If subdomain is provided
 if [ -n "$subdomain" ]; then
     get_subdomain_info "$domain" "$subdomain"
 else
-    # Default subdomains
-    for sd in www lb-01 web-01 web-02; do
-        get_subdomain_info "$domain" "$sd"
+    for sub in www lb-01 web-01 web-02; do
+        get_subdomain_info "$domain" "$sub"
     done
 fi
