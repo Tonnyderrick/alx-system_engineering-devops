@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# Install Nginx and configure it to display "Hello World!" on the root URL
+
+# Update package list
+apt-get update -y
+
+# Install Nginx silently
+apt-get install -y nginx
+
+# Create custom HTML page
+echo "Hello World!" > /var/www/html/index.nginx-debian.html
+
+# Restart nginx using service (not systemctl)
+service nginx restart
