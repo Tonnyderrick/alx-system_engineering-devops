@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+# Sets up Nginx with a custom header X-Served-By: <hostname>
+# shellcheck disable=SC2154
+
+# Install Nginx if it's not installed
+sudo apt-get update -y
+sudo apt-get install nginx -y
+
+# Get hostname
+hostname=$(hostname)
+
+# Add custom header to nginx config
+config_file="/etc/nginx/sites-available/default"
+sudo sed -i "/^\s*location \/ {/a \\tadd_header X-Served-By \"$hostname\";" "$config_file"
+
+# Restart Nginx to apply changes
+sudo systemctl restart nginx
