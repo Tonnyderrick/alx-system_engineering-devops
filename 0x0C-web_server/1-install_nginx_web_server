@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
-# This script installs and configures nginx to return "Hello World!" at /
+# This script installs nginx, starts it, and sets a custom "Hello World!" page
 
-# Update package list and install nginx silently
+# Update package list and install nginx
 apt-get update -y
 apt-get install nginx -y
 
-# Replace default nginx index with Hello World!
+# Replace default index.html with "Hello World!" content
 echo "Hello World!" > /var/www/html/index.html
 
-# Start nginx using service (not systemctl)
+# Start nginx (do NOT use systemctl as per task requirement)
 service nginx start
